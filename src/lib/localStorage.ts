@@ -45,14 +45,14 @@ class LocalStorageDB {
 
   private initializeDefaultCredentials() {
     if (!localStorage.getItem(this.CREDENTIALS_KEY)) {
-      // Default credentials: username = "admin", password = "admin"
+      // Default credentials: email = "test@gmail.com", password = "123456789"
       const defaultCredentials = {
-        username: 'admin',
-        password: 'admin', // In real app, this should be hashed
-        email: 'admin@techstories.com'
+        username: 'test',
+        password: '123456789', // In real app, this should be hashed
+        email: 'test@gmail.com'
       };
       localStorage.setItem(this.CREDENTIALS_KEY, JSON.stringify(defaultCredentials));
-      console.log('🔐 Default credentials created: username="admin", password="admin"');
+      console.log('🔐 Default credentials created: email="test@gmail.com", password="123456789"');
     }
   }
 
@@ -336,7 +336,11 @@ Stay tuned for more technical deep-dives! 🔧`,
     localStorage.removeItem(this.CATEGORIES_KEY);
     localStorage.removeItem(this.USER_KEY);
     localStorage.removeItem(this.AUTH_KEY);
+    localStorage.removeItem(this.CREDENTIALS_KEY);
     console.log('🧹 All data cleared');
+    // Reinitialize with new credentials
+    this.initializeDefaultCredentials();
+    this.initializeDefaultData();
   }
 }
 

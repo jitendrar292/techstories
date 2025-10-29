@@ -46,8 +46,8 @@ export const Register = () => {
       };
       localStorageDB.setCurrentUser(newUser);
       
-      alert('Registration successful! You can now log in.');
-      navigate('/login');
+      alert('Registration successful! Redirecting to admin...');
+      window.location.href = '/admin';
     } catch (err) {
       setError('Registration failed');
       setLoading(false);

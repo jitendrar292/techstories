@@ -34,7 +34,8 @@ export const Login = () => {
         user_metadata: { full_name: creds?.username || 'Admin User' }
       };
       localStorageDB.setCurrentUser(user);
-      navigate('/admin');
+      // Force reload to update auth state
+      window.location.href = '/admin';
     } else {
       setError('Invalid username or password');
       setLoading(false);
@@ -45,17 +46,6 @@ export const Login = () => {
     <div className="container" style={styles.container}>
       <div style={styles.formWrapper}>
         <h1 style={styles.title}>Login</h1>
-        
-        <div style={styles.infoBox}>
-          <h3 style={styles.infoTitle}>🔐 Demo Credentials</h3>
-          <p style={styles.infoText}>
-            <strong>Username:</strong> admin<br />
-            <strong>Password:</strong> admin
-          </p>
-          <p style={styles.infoSubtext}>
-            You can also use email: <strong>admin@techstories.com</strong>
-          </p>
-        </div>
 
         {error && <div style={styles.error}>{error}</div>}
         <form onSubmit={handleSubmit} style={styles.form}>
@@ -68,7 +58,7 @@ export const Login = () => {
               type="text"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              placeholder="admin"
+              placeholder="Enter username or email"
               required
             />
           </div>
@@ -81,7 +71,7 @@ export const Login = () => {
               type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              placeholder="admin"
+              placeholder="Enter password"
               required
             />
           </div>
@@ -117,29 +107,6 @@ const styles = {
     fontSize: '2.5rem',
     marginBottom: 'calc(var(--spacing-unit) * 4)',
     textAlign: 'center' as const,
-  },
-  infoBox: {
-    backgroundColor: '#e3f2fd',
-    border: '2px solid #2196f3',
-    borderRadius: '8px',
-    padding: '16px',
-    marginBottom: '24px',
-  },
-  infoTitle: {
-    margin: '0 0 12px 0',
-    fontSize: '18px',
-    color: '#1565c0',
-  },
-  infoText: {
-    margin: '8px 0',
-    fontSize: '15px',
-    lineHeight: '1.6',
-    color: '#0d47a1',
-  },
-  infoSubtext: {
-    margin: '8px 0 0 0',
-    fontSize: '13px',
-    color: '#1976d2',
   },
   error: {
     padding: 'calc(var(--spacing-unit) * 1.5)',

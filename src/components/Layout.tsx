@@ -9,7 +9,7 @@ export const Layout = ({ children }: { children: React.ReactNode }) => {
 
   const handleLogout = async () => {
     localStorageDB.setCurrentUser(null);
-    navigate('/');
+    window.location.href = '/';
   };
 
   return (
