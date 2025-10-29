@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
-import { supabase } from '../lib/supabase';
+import { localStorageDB } from '../lib/localStorage';
 import { StorageStatus } from '../components/StorageStatus';
 
 interface Post {
@@ -40,17 +40,8 @@ export const Admin = () => {
   const fetchPosts = async () => {
     setLoading(true);
     try {
-      const result = await supabase
-        .from('posts')
-        .select('*')
-        .order('created_at', { ascending: false })
-        .then();
-
-      if (result.error) {
-        console.error('Error fetching posts:', result.error);
-      } else if (result.data) {
-        setPosts(result.data as Post[]);
-      }
+      const allPosts = localStorageDB.getPosts();
+      setPosts(allPosts as Post[]);
     } catch (err) {
       console.error('Error fetching posts:', err);
     }
@@ -61,18 +52,9 @@ export const Admin = () => {
     if (!window.confirm('Are you sure you want to delete this post?')) return;
     
     try {
-      const result = await supabase
-        .from('posts')
-        .delete()
-        .eq('id', postId)
-        .then();
-
-      if (result.error) {
-        alert(`Failed to delete post: ${result.error.message}`);
-      } else {
-        alert('Post deleted successfully!');
-        fetchPosts(); // Refresh the list
-      }
+      localStorageDB.deletePost(postId);
+      alert('Post deleted successfully!');
+      fetchPosts(); // Refresh the list
     } catch (err) {
       console.error('Error deleting post:', err);
       alert('Failed to delete post');

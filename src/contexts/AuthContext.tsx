@@ -1,5 +1,5 @@
 import { createContext, useContext, useEffect, useState } from 'react';
-import { supabase } from '../lib/supabase';
+import { localStorageDB } from '../lib/localStorage';
 
 // Simple user type for localStorage
 type User = {
@@ -25,23 +25,21 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Get initial user
-    supabase.auth.getUser().then((result) => {
-      if (result.data?.user) {
-        setUser(result.data.user as User);
-      }
-      setLoading(false);
-    });
+    // Get initial user from localStorage
+    const currentUser = localStorageDB.getCurrentUser();
+    setUser(currentUser);
+    setLoading(false);
 
-    // Listen for auth changes
-    const subscription = supabase.auth.onAuthStateChange((_event, session) => {
-      setUser(session?.user as User || null);
-    });
+    // Listen for storage changes (for multi-tab support)
+    const handleStorageChange = () => {
+      const updatedUser = localStorageDB.getCurrentUser();
+      setUser(updatedUser);
+    };
+
+    window.addEventListener('storage', handleStorageChange);
 
     return () => {
-      if (subscription?.data?.subscription?.unsubscribe) {
-        subscription.data.subscription.unsubscribe();
-      }
+      window.removeEventListener('storage', handleStorageChange);
     };
   }, []);
 

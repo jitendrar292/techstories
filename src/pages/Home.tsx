@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { supabase, Post } from '../lib/supabase';
+import { Post } from '../lib/types';
+import { localStorageDB } from '../lib/localStorage';
 
 export const Home = () => {
   const [posts, setPosts] = useState<Post[]>([]);
@@ -13,22 +14,11 @@ export const Home = () => {
   const fetchPosts = async () => {
     console.log('🏠 Home: Fetching posts...');
     try {
-      const result = await supabase
-        .from('posts')
-        .select('*')
-        .order('created_at', { ascending: false })
-        .then();
-
-      console.log('🏠 Home: Posts result:', result);
-      
-      if (result.error) {
-        console.error('Error fetching posts:', result.error);
-      } else if (result.data) {
-        // Filter for published posts only
-        const publishedPosts = (result.data as Post[]).filter(post => post.published);
-        console.log('🏠 Home: Published posts:', publishedPosts.length, publishedPosts);
-        setPosts(publishedPosts);
-      }
+      const allPosts = localStorageDB.getPosts();
+      // Filter for published posts only
+      const publishedPosts = allPosts.filter(post => post.published);
+      console.log('🏠 Home: Published posts:', publishedPosts.length, publishedPosts);
+      setPosts(publishedPosts);
     } catch (err) {
       console.error('Error fetching posts:', err);
     }

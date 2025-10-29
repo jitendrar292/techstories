@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { supabase, Post, Comment } from '../lib/supabase';
+import { Post, Comment } from '../lib/types';
+import { localStorageDB } from '../lib/localStorage';
 
 export const PostDetail = () => {
   const { slug } = useParams<{ slug: string }>();
@@ -22,24 +23,14 @@ export const PostDetail = () => {
 
   const fetchPost = async () => {
     try {
-      const result = await supabase
-        .from('posts')
-        .select('*')
-        .eq('slug', slug)
-        .maybeSingle();
-
-      if (result.error) {
-        console.error('Error fetching post:', result.error);
+      const foundPost = localStorageDB.getPostBySlug(slug!);
+      
+      if (!foundPost) {
         navigate('/');
-      } else if (!result.data) {
-        navigate('/');
+      } else if (foundPost.published) {
+        setPost(foundPost);
       } else {
-        // Only show if published
-        if (result.data.published) {
-          setPost(result.data);
-        } else {
-          navigate('/');
-        }
+        navigate('/');
       }
     } catch (err) {
       console.error('Error fetching post:', err);
@@ -49,16 +40,8 @@ export const PostDetail = () => {
   };
 
   const fetchComments = async () => {
-    const { data } = await supabase
-      .from('comments')
-      .select('*')
-      .eq('post_id', slug)
-      .eq('approved', true)
-      .order('created_at', { ascending: true });
-
-    if (data) {
-      setComments(data);
-    }
+    // Comments not implemented in localStorage yet
+    setComments([]);
   };
 
   const handleSubmitComment = async (e: React.FormEvent) => {
@@ -66,22 +49,11 @@ export const PostDetail = () => {
     if (!post) return;
 
     setSubmitting(true);
-    const { error } = await supabase.from('comments').insert({
-      post_id: post.id,
-      author_name: authorName,
-      author_email: authorEmail,
-      content: commentContent,
-      approved: false,
-    });
-
-    if (error) {
-      alert('Failed to submit comment');
-    } else {
-      alert('Comment submitted! It will appear after approval.');
-      setAuthorName('');
-      setAuthorEmail('');
-      setCommentContent('');
-    }
+    // Comments not implemented yet
+    alert('Comments feature coming soon!');
+    setAuthorName('');
+    setAuthorEmail('');
+    setCommentContent('');
     setSubmitting(false);
   };
 

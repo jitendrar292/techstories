@@ -1,6 +1,6 @@
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
-import { supabase } from '../lib/supabase';
+import { localStorageDB } from '../lib/localStorage';
 import { DataManager } from './DataManager';
 
 export const Layout = ({ children }: { children: React.ReactNode }) => {
@@ -8,7 +8,7 @@ export const Layout = ({ children }: { children: React.ReactNode }) => {
   const navigate = useNavigate();
 
   const handleLogout = async () => {
-    await supabase.auth.signOut();
+    localStorageDB.setCurrentUser(null);
     navigate('/');
   };
 

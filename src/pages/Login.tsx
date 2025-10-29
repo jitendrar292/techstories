@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
-import { supabase } from '../lib/supabase';
+import { localStorageDB } from '../lib/localStorage';
 
 export const Login = () => {
   const { user } = useAuth();
@@ -22,16 +22,22 @@ export const Login = () => {
     setLoading(true);
     setError('');
 
-    const { error } = await supabase.auth.signInWithPassword({
-      email,
-      password,
-    });
+    const credentials = localStorageDB.getCredentials();
+    const isValid = localStorageDB.validateCredentials(email, password) || 
+                    (credentials && credentials.email === email && localStorageDB.validateCredentials(credentials.username, password));
 
-    if (error) {
-      setError(error.message);
-      setLoading(false);
-    } else {
+    if (isValid) {
+      const creds = localStorageDB.getCredentials();
+      const user = {
+        id: 'local-user',
+        email: creds?.email || email,
+        user_metadata: { full_name: creds?.username || 'Admin User' }
+      };
+      localStorageDB.setCurrentUser(user);
       navigate('/admin');
+    } else {
+      setError('Invalid username or password');
+      setLoading(false);
     }
   };
 

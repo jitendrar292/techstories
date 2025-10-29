@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
-import { supabase } from '../lib/supabase';
+import { localStorageDB } from '../lib/localStorage';
 
 export const Register = () => {
   const { user } = useAuth();
@@ -35,17 +35,22 @@ export const Register = () => {
       return;
     }
 
-    const { error } = await supabase.auth.signUp({
-      email,
-      password,
-    });
-
-    if (error) {
-      setError(error.message);
-      setLoading(false);
-    } else {
+    try {
+      const username = email.split('@')[0];
+      localStorageDB.updateCredentials(username, password, email);
+      
+      const newUser = {
+        id: `local-${Date.now()}`,
+        email,
+        user_metadata: { full_name: username }
+      };
+      localStorageDB.setCurrentUser(newUser);
+      
       alert('Registration successful! You can now log in.');
       navigate('/login');
+    } catch (err) {
+      setError('Registration failed');
+      setLoading(false);
     }
   };
 

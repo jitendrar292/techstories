@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { localStorageAdapter } from '../lib/localStorageAdapter';
+import { localStorageDB } from '../lib/localStorage';
 
 export const DataManager = () => {
   const [showManager, setShowManager] = useState(false);
@@ -7,7 +7,7 @@ export const DataManager = () => {
   const [message, setMessage] = useState('');
 
   const handleExport = () => {
-    const data = localStorageAdapter.exportData();
+    const data = localStorageDB.exportData();
     const blob = new Blob([data], { type: 'application/json' });
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
@@ -23,7 +23,7 @@ export const DataManager = () => {
 
   const handleImport = () => {
     try {
-      const success = localStorageAdapter.importData(importData);
+      const success = localStorageDB.importData(importData);
       if (success) {
         setMessage('✅ Data imported successfully! Refresh the page to see changes.');
         setImportData('');
@@ -38,7 +38,7 @@ export const DataManager = () => {
 
   const handleClearAll = () => {
     if (window.confirm('Are you sure you want to delete all data? This cannot be undone.')) {
-      localStorageAdapter.clearAllData();
+      localStorageDB.clearAllData();
       setMessage('🧹 All data cleared! Refresh the page to reset to default data.');
       setTimeout(() => setMessage(''), 5000);
     }

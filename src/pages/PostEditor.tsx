@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
-import { supabase, Category } from '../lib/supabase';
+import { Category } from '../lib/types';
+import { localStorageDB } from '../lib/localStorage';
 
 export const PostEditor = () => {
   const { user, loading: authLoading } = useAuth();
@@ -34,35 +35,30 @@ export const PostEditor = () => {
   }, [postId, isEditing]);
 
   const fetchCategories = async () => {
-    const { data } = await supabase
-      .from('categories')
-      .select('*')
-      .order('name');
-
-    if (data) {
-      setCategories(data);
-    }
+    const data = localStorageDB.getCategories();
+    setCategories(data);
   };
 
   const fetchPost = async () => {
-    const { data, error } = await supabase
-      .from('posts')
-      .select('*')
-      .eq('id', postId)
-      .maybeSingle();
-
-    if (error) {
+    try {
+      const data = localStorageDB.getPost(postId!);
+      
+      if (!data) {
+        alert('Failed to load post');
+        navigate('/admin');
+      } else {
+        setTitle(data.title);
+        setSlug(data.slug);
+        setContent(data.content);
+        setExcerpt(data.excerpt || '');
+        setFeaturedImage(data.featured_image || '');
+        setCategoryId(data.category_id || '');
+        setPublished(data.published);
+      }
+    } catch (error) {
       console.error('Error fetching post:', error);
       alert('Failed to load post');
       navigate('/admin');
-    } else if (data) {
-      setTitle(data.title);
-      setSlug(data.slug);
-      setContent(data.content);
-      setExcerpt(data.excerpt || '');
-      setFeaturedImage(data.featured_image || '');
-      setCategoryId(data.category_id || '');
-      setPublished(data.published);
     }
   };
 
@@ -88,10 +84,8 @@ export const PostEditor = () => {
     setError('');
 
     try {
-      console.log('Attempting to submit post...', { isEditing, postId });
-      
       if (isEditing) {
-        console.log('Updating post with data:', {
+        localStorageDB.updatePost(postId!, {
           title,
           slug,
           content,
@@ -101,65 +95,25 @@ export const PostEditor = () => {
           published,
           published_at: published ? new Date().toISOString() : null,
         });
-        
-        const { error } = await supabase
-          .from('posts')
-          .update({
-            title,
-            slug,
-            content,
-            excerpt: excerpt || null,
-            featured_image: featuredImage || null,
-            category_id: categoryId || null,
-            published,
-            published_at: published ? new Date().toISOString() : null,
-          })
-          .eq('id', postId);
-
-        if (error) {
-          console.error('Supabase update error:', error);
-          throw error;
-        }
         alert('Post updated successfully!');
       } else {
-        const { error } = await supabase
-          .from('posts')
-          .insert({
-            title,
-            slug,
-            content,
-            excerpt: excerpt || null,
-            featured_image: featuredImage || null,
-            category_id: categoryId || null,
-            published,
-            published_at: published ? new Date().toISOString() : null,
-            author_id: user.id,
-          });
-
-        if (error) throw error;
+        localStorageDB.createPost({
+          title,
+          slug,
+          content,
+          excerpt: excerpt || null,
+          featured_image: featuredImage || null,
+          category_id: categoryId || null,
+          published,
+          published_at: published ? new Date().toISOString() : null,
+          author_id: user.id,
+        });
         alert('Post created successfully!');
       }
       navigate('/admin');
     } catch (err: any) {
-      console.error('Full error details:', err);
-      console.error('Error type:', typeof err);
-      console.error('Error message:', err.message);
-      console.error('Error stack:', err.stack);
-      
-      let errorMessage = 'An error occurred';
-      if (err.message) {
-        errorMessage = err.message;
-      } else if (err.toString) {
-        errorMessage = err.toString();
-      }
-      
-      // Check for common network errors
-      if (err.message?.includes('Failed to fetch') || err.name === 'TypeError') {
-        errorMessage = 'Network error: Unable to connect to the database. Please check your internet connection and try again.';
-      }
-      
-      setError(errorMessage);
-      alert(`Failed to ${isEditing ? 'update' : 'create'} post: ${errorMessage}`);
+      console.error('Error saving post:', err);
+      setError(err.message || 'Failed to save post');
     } finally {
       setLoading(false);
     }
