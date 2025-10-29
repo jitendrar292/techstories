@@ -83,7 +83,9 @@ export const Home = () => {
           <div className="card" style={styles.sidebarCard}>
             <h3 style={styles.sidebarTitle}>About Me</h3>
             <p style={styles.sidebarText}>
-              Hi! I'm a tech enthusiast sharing my journey, insights, and experiences in technology, programming, and career development.
+              <strong>Jitendra Rawat</strong><br />
+              Senior Software Engineer @ Adidas<br /><br />
+              Passionate about building secure, scalable systems and leveraging AI/ML to solve real-world problems in cybersecurity and digital ecosystems.
             </p>
           </div>
 
