@@ -165,10 +165,11 @@ const styles = {
   container: {
     paddingTop: 'calc(var(--spacing-unit) * 4)',
     paddingBottom: 'calc(var(--spacing-unit) * 8)',
-    maxWidth: '800px',
   },
   article: {
     marginBottom: 'calc(var(--spacing-unit) * 8)',
+    maxWidth: '800px',
+    margin: '0 auto calc(var(--spacing-unit) * 8) auto',
   },
   category: {
     display: 'inline-block',
@@ -206,6 +207,8 @@ const styles = {
   commentsSection: {
     borderTop: '2px solid var(--color-border)',
     paddingTop: 'calc(var(--spacing-unit) * 6)',
+    maxWidth: '800px',
+    margin: '0 auto',
   },
   commentsTitle: {
     fontSize: '2rem',

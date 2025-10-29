@@ -97,6 +97,121 @@ class LocalStorageDB {
       const defaultPosts: Post[] = [
         {
           id: '1',
+          title: 'Improving Security Incident Response at Adidas with Large Language Models',
+          slug: 'improving-security-incident-response-at-adidas-with-llm',
+          content: `# Improving Security Incident Response at Adidas with Large Language Models
+
+*By Jitendra Rawat · Adidas Engineering · Aug 2025*
+
+---
+
+Adidas operates one of the world's largest digital and retail ecosystems, serving millions of consumers daily across web, app, and partner platforms. With that scale comes immense responsibility — to safeguard consumer identities, payments, and loyalty data while maintaining performance and reliability.
+
+As Adidas expands into AI-driven personalization and connected retail, our **security alert volume** has grown exponentially. Traditional manual processes couldn't scale fast enough.  
+
+To solve this, our **Cyber Defense & Incident Response (IR)** team started exploring **Large Language Models (LLMs)** to automate high-volume, repetitive workflows — reducing investigation time while keeping analysts in control.
+
+What began as an experiment evolved into a **production-grade AI assistant** that helps with triage, phishing analysis, and incident documentation.
+
+---
+
+## ⚙️ The Challenge
+
+As Adidas scaled, our Security Operations Center (SOC) faced new operational bottlenecks:
+
+- Thousands of alerts daily from microservices, APIs, and identity systems  
+- Employee phishing reports from across global offices and stores  
+- Compliance-heavy incident documentation  
+
+Manual reviews introduced latency and fatigue. We needed automation that could **reduce noise, speed up triage, and preserve accuracy**.
+
+---
+
+## 🧠 AI-Powered Triage
+
+Low- and medium-severity alerts (unusual logins, API spikes, permission anomalies) took 20–40 minutes to review manually.
+
+**Our LLM workflow changed that:**
+
+1. **Trigger:** Alerts flow in from Adidas' SIEM system.  
+2. **Context Gathering:** Metadata, logs, and user session details are aggregated.  
+3. **Retrieval-Augmented Generation (RAG):** Similar historical cases are fetched from a vector database.  
+4. **Inference:** The model analyzes the alert and produces a concise impact summary.  
+5. **Verdict:** The system recommends escalation or closure.
+
+⏱️ **Result:** Average triage time dropped to <5 minutes, with 96% alignment to human analysts.  
+
+Analysts now spend more time on **critical threat analysis** rather than repetitive investigation.
+
+---
+
+## 🧩 Automating Phishing Reviews
+
+Employees submit hundreds of phishing reports every week. Most are safe — but each requires manual inspection.
+
+With LLMs:
+- Emails are parsed and enriched with threat intel.  
+- The LLM classifies them as **phishing**, **spam**, or **safe**.  
+- Reporters receive an automated response within **seconds**.  
+
+The system runs 24/7 with **99% precision** and zero known false negatives. Analysts now focus only on targeted or novel campaigns.
+
+---
+
+## 📄 AI-Generated Incident Reports
+
+Every major incident requires a detailed post-mortem — but compiling timelines from Slack, Jira, and Confluence used to take hours.
+
+Now:
+- The LLM aggregates investigation data across tools.  
+- Summarizes the incident timeline, impact, and root cause.  
+- Produces a **draft report** in under 10 minutes.
+
+Reports follow a consistent structure and tone, improving clarity and compliance speed.
+
+---
+
+## 💡 Lessons Learned
+
+- **Structured inputs matter:** Clear metadata → reliable output.  
+- **Human oversight stays essential:** The AI assists, not replaces.  
+- **Cross-validation helps:** One model verifying another improves confidence.  
+- **Bias toward safety:** When uncertain, the system over-escalates.
+
+---
+
+## ⚡ Impact
+
+- ⏱️ 80% reduction in triage time  
+- 📉 95% fewer manual phishing reviews  
+- 📑 90% faster report generation  
+- 💪 Analysts re-focused on high-value investigations
+
+Automation reduced alert fatigue and let our teams scale without proportional headcount growth.
+
+---
+
+## 🏁 Closing Thoughts
+
+At Adidas, we see AI as a **force multiplier for security teams** — not a replacement.  
+By combining LLM-driven automation with human expertise, we've created faster, more consistent, and resilient security workflows.
+
+The mission remains the same: **protect every customer experience at the speed of sport.**
+
+---
+
+*Tags:* AI, LLM, Security, Incident Response, Adidas Engineering, MLOps, Automation, RAG`,
+          excerpt: 'How Adidas leveraged Large Language Models to automate security incident response, reducing triage time by 80% and enabling analysts to focus on critical threats.',
+          featured_image: null,
+          category_id: '1',
+          published: true,
+          published_at: new Date().toISOString(),
+          created_at: new Date().toISOString(),
+          updated_at: new Date().toISOString(),
+          author_id: 'local-user'
+        },
+        {
+          id: '2',
           title: 'Welcome to My Real Tech Stories',
           slug: 'welcome-to-my-real-tech-stories',
           content: `# Welcome to My Real Tech Stories! 🚀
@@ -132,7 +247,7 @@ Happy reading! 📚`,
           author_id: 'local-user'
         },
         {
-          id: '2',
+          id: '3',
           title: 'Building This Blog: A Meta Story',
           slug: 'building-this-blog-meta-story',
           content: `# Building This Blog: A Meta Story
